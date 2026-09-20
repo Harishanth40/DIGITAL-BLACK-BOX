@@ -1,0 +1,1092 @@
+/* ==========================================================================
+   DIGITAL BLACK BOX - FORENSIC WORKSTATION STYLESHEET
+   AIRCRAFT BLACK BOX & SYSTEM INCIDENT RECONSTRUCTION SYSTEM
+   ========================================================================== */
+
+:root {
+    --bg-dark: #090c10;
+    --bg-panel: #11161d;
+    --bg-panel-alt: #161c26;
+    --border-color: #232d3d;
+    --border-highlight: #34445c;
+    
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    
+    --accent-amber: #f59e0b;
+    --accent-amber-glow: rgba(245, 158, 11, 0.25);
+    --accent-cyan: #00d2ff;
+    --accent-blue: #38bdf8;
+    --accent-red: #ef4444;
+    --accent-red-glow: rgba(239, 68, 68, 0.3);
+    --accent-green: #10b981;
+    
+    --font-ui: 'Chakra Petch', 'Inter', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body.forensic-theme {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+    height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Technical Grid & Scanline Background overlays */
+.grid-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-size: 30px 30px;
+    background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.scanline-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.6;
+}
+
+.app-container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ==========================================================================
+   CONSOLES & NAVIGATION
+   ========================================================================== */
+
+.console-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bg-panel);
+    border-bottom: 2px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+    gap: 1rem;
+}
+
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.brand-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pulse-indicator {
+    width: 10px;
+    height: 10px;
+    background-color: var(--accent-amber);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent-amber);
+    animation: blink-pulse 1.8s infinite ease-in-out;
+}
+
+@keyframes blink-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.brand-title {
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+}
+
+.sys-status-tag {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--border-color);
+    border-radius: 2px;
+}
+
+.sys-status-tag .label {
+    color: var(--text-secondary);
+}
+
+.sys-status-tag .online-val {
+    color: var(--accent-green);
+    font-weight: bold;
+}
+
+/* Console Top Navigation Selector */
+.console-nav {
+    display: flex;
+    gap: 0.4rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.25rem;
+    border: 1px solid var(--border-color);
+    border-radius: 2px;
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.nav-btn .nav-code {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.nav-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-btn.active {
+    color: var(--accent-amber);
+    background: var(--bg-panel-alt);
+    border-bottom: 2px solid var(--accent-amber);
+}
+
+.badge-count {
+    background: var(--accent-red);
+    color: white;
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    border-radius: 10px;
+}
+
+.btn-simulation {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid var(--accent-amber);
+    color: var(--accent-amber);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.55rem 1.1rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-simulation:hover {
+    background: var(--accent-amber);
+    color: var(--bg-dark);
+    box-shadow: 0 0 15px var(--accent-amber-glow);
+}
+
+/* ==========================================================================
+   VIEWPORT & TAB CONTENTS
+   ========================================================================== */
+
+.workstation-viewport {
+    flex: 1;
+    padding: 1.5rem;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.shadow-box {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 2px;
+}
+
+.panel-header {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+}
+
+.panel-icon {
+    color: var(--accent-amber);
+}
+
+/* ==========================================================================
+   SECTION 1: BLACK BOX CORE (HOME SCREEN)
+   ========================================================================== */
+
+.core-grid-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr 300px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.telemetry-panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.metric-meter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.metric-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.metric-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.metric-val {
+    color: var(--accent-cyan);
+    font-weight: bold;
+}
+
+.meter-bar-track {
+    height: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.meter-bar-fill {
+    height: 100%;
+    background: var(--accent-blue);
+    width: 0%;
+    transition: width 0.4s ease;
+}
+
+.meter-bar-fill.warning {
+    background: var(--accent-amber);
+}
+
+.meter-bar-fill.critical {
+    background: var(--accent-red);
+}
+
+.network-telemetry {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+}
+
+.net-stat {
+    display: flex;
+    justify-content: space-between;
+}
+
+.net-lbl { color: var(--text-muted); }
+.net-val { color: var(--text-primary); font-weight: bold; }
+.net-val.success { color: var(--accent-green); }
+
+.diagnostic-box {
+    border-top: 1px solid var(--border-color);
+    padding-top: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.diag-title { color: var(--accent-amber); margin-top: 0.4rem; font-weight: bold; }
+.diag-detail { color: var(--text-muted); margin-bottom: 0.4rem; }
+
+/* Center Panel: Core Visualizer */
+.core-center-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.black-box-core-visualizer {
+    position: relative;
+    width: 380px;
+    height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.core-svg-graphic {
+    width: 100%;
+    height: 100%;
+}
+
+.hex-outer-ring {
+    fill: none;
+    stroke: var(--border-highlight);
+    stroke-width: 2;
+    stroke-dasharray: 8 4;
+}
+
+.ring-middle {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.05);
+    stroke-width: 4;
+}
+
+.ring-progress {
+    fill: none;
+    stroke: var(--accent-amber);
+    stroke-width: 4;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.ring-inner {
+    fill: #0d121a;
+    stroke: var(--accent-amber);
+    stroke-width: 2;
+}
+
+.ring-pulse {
+    fill: none;
+    stroke: rgba(245, 158, 11, 0.2);
+    stroke-width: 1;
+    animation: core-pulse 3s infinite ease-out;
+    transform-origin: center;
+}
+
+@keyframes core-pulse {
+    0% { r: 50; opacity: 0.8; }
+    100% { r: 92; opacity: 0; }
+}
+
+.core-overlay-text {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.recording-badge {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent-amber);
+    margin-bottom: 0.3rem;
+}
+
+.red-dot {
+    color: var(--accent-red);
+}
+
+.core-title-text {
+    font-family: var(--font-ui);
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: var(--text-primary);
+}
+
+.event-counter-text {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem 0;
+}
+
+.event-counter-text .num {
+    font-family: var(--font-mono);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    line-height: 1;
+}
+
+.event-counter-text .lbl {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+.core-duration-text {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+/* System Pulse Waveform Canvas */
+.pulse-container {
+    width: 100%;
+    padding: 0.75rem;
+}
+
+.pulse-header {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+#canvas-system-pulse {
+    width: 100%;
+    height: 90px;
+    background: #090d14;
+    border: 1px solid var(--border-color);
+}
+
+/* Incidents Right List */
+.recent-incidents-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.incident-card-sm {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    border-left: 3px solid var(--accent-red);
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.inc-card-head {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+}
+
+.inc-card-id { color: var(--accent-red); font-weight: bold; }
+.inc-card-time { color: var(--text-muted); }
+
+.inc-card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.btn-investigate {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid var(--accent-red);
+    color: var(--accent-red);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    margin-top: 0.4rem;
+    align-self: flex-start;
+    transition: all 0.2s;
+}
+
+.btn-investigate:hover {
+    background: var(--accent-red);
+    color: white;
+}
+
+.status-summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding: 0.5rem;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.summary-item .lbl { color: var(--text-muted); }
+.summary-item .val { color: var(--text-primary); }
+.summary-item .val.amber { color: var(--accent-amber); font-weight: bold; }
+
+.mt-12 { margin-top: 0.75rem; }
+.empty-state-text { color: var(--text-muted); font-size: 0.8rem; font-family: var(--font-mono); font-style: italic; }
+
+/* ==========================================================================
+   SECTION 2: LIVE FLIGHT RECORDER EVENT STREAM
+   ========================================================================== */
+
+.stream-container {
+    display: flex;
+    flex-direction: column;
+    height: 75vh;
+}
+
+.stream-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.stream-title {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--accent-amber);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stream-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.console-select, .console-btn {
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding: 0.4rem 0.75rem;
+    cursor: pointer;
+}
+
+.console-btn:hover {
+    border-color: var(--accent-amber);
+    color: var(--accent-amber);
+}
+
+.flight-recorder-console {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    background: #080b0f;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.log-entry-line {
+    display: flex;
+    gap: 1rem;
+    padding: 0.35rem 0.5rem;
+    border-left: 2px solid transparent;
+    background: rgba(255, 255, 255, 0.015);
+}
+
+.log-entry-line:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.log-entry-line.CRITICAL { border-left-color: var(--accent-red); background: rgba(239, 68, 68, 0.08); }
+.log-entry-line.WARN { border-left-color: var(--accent-amber); background: rgba(245, 158, 11, 0.05); }
+.log-entry-line.INFO { border-left-color: var(--accent-blue); }
+
+.log-ts { color: var(--text-muted); width: 110px; flex-shrink: 0; }
+.log-cat { color: var(--accent-amber); width: 120px; font-weight: bold; flex-shrink: 0; }
+.log-msg { color: var(--text-primary); flex: 1; }
+
+/* ==========================================================================
+   SECTION 3 & 4: INCIDENT RECONSTRUCTION & TIME MACHINE
+   ========================================================================== */
+
+.reconstruction-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.incident-reconstruction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-left: 4px solid var(--accent-red);
+}
+
+.inc-badge-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 0.4rem;
+}
+
+.inc-id-badge {
+    background: var(--accent-red);
+    color: white;
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 0.82rem;
+    padding: 0.2rem 0.6rem;
+}
+
+.inc-severity-tag {
+    color: var(--accent-red);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.simulation-tag {
+    background: var(--accent-amber);
+    color: var(--bg-dark);
+    font-family: var(--font-mono);
+    font-weight: bold;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+}
+
+.inc-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 1px;
+}
+
+.inc-timestamp-str {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin-top: 0.2rem;
+}
+
+.btn-report-gen {
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid var(--accent-amber);
+    color: var(--accent-amber);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 0.75rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-report-gen:hover {
+    background: var(--accent-amber);
+    color: var(--bg-dark);
+    box-shadow: 0 0 15px var(--accent-amber-glow);
+}
+
+/* Time Machine Controller Bar */
+.time-machine-bar {
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border-top: 2px solid var(--accent-amber);
+}
+
+.tm-title {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--accent-amber);
+}
+
+.tm-subtitle {
+    color: var(--text-muted);
+    font-weight: normal;
+}
+
+.scrubber-control-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tm-btn {
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+}
+
+.tm-btn:hover {
+    border-color: var(--accent-amber);
+    color: var(--accent-amber);
+}
+
+.slider-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+#time-machine-slider {
+    width: 100%;
+    accent-color: var(--accent-amber);
+    cursor: pointer;
+    height: 8px;
+    background: #090d14;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.fail-marker {
+    color: var(--accent-red);
+    font-weight: bold;
+}
+
+.scrub-reading-display {
+    display: flex;
+    gap: 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+}
+
+.scrub-item .lbl { color: var(--text-muted); margin-right: 0.4rem; }
+.scrub-item .val { color: var(--text-primary); font-weight: bold; }
+.scrub-item .val.highlighted { color: var(--accent-amber); font-size: 0.95rem; }
+
+/* Reconstruction Two Column Layout */
+.reconstruction-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* Step Timeline Tree */
+.vertical-timeline-container {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    position: relative;
+}
+
+.vertical-timeline-container::before {
+    content: '';
+    position: absolute;
+    top: 2rem;
+    bottom: 2rem;
+    left: 2.25rem;
+    width: 2px;
+    background: var(--border-color);
+}
+
+.timeline-step-node {
+    display: flex;
+    gap: 1.25rem;
+    position: relative;
+    z-index: 1;
+}
+
+.node-indicator {
+    width: 24px;
+    height: 24px;
+    background: var(--bg-panel);
+    border: 2px solid var(--border-highlight);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.6rem;
+    color: var(--text-muted);
+}
+
+.timeline-step-node.active .node-indicator {
+    border-color: var(--accent-amber);
+    background: var(--accent-amber);
+    color: var(--bg-dark);
+    box-shadow: 0 0 10px var(--accent-amber-glow);
+}
+
+.timeline-step-node.CRITICAL .node-indicator {
+    border-color: var(--accent-red);
+    background: var(--accent-red);
+    color: white;
+}
+
+.node-body {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.timeline-step-node.active .node-body {
+    border-color: var(--accent-amber);
+}
+
+.node-time {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.node-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Diagnostic & Map Panel */
+.reconstruction-diagnostics-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.proc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+}
+
+.proc-table th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    background: rgba(0, 0, 0, 0.4);
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.proc-table td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.proc-table tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.map-disclaimer {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.warn-badge { color: var(--accent-amber); font-weight: bold; }
+
+.svg-map-viewport {
+    height: 250px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ==========================================================================
+   SECTION 5: SYSTEM DIAGNOSTICS & INCIDENTS GRID
+   ========================================================================== */
+
+.incidents-grid {
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+}
+
+.sys-diag-grid {
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.diag-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    padding: 1.25rem;
+    font-family: var(--font-mono);
+}
+
+.diag-card h3 {
+    color: var(--accent-amber);
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.4rem;
+}
+
+.diag-card p {
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    margin-bottom: 0.4rem;
+}
+
+/* ==========================================================================
+   FORENSIC REPORT MODAL & PRINT STYLES
+   ========================================================================== */
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.report-modal-content {
+    background: var(--bg-panel);
+    border: 1px solid var(--accent-amber);
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+}
+
+.report-modal-toolbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.printable-forensic-report {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2.5rem;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+}
+
+.report-header-banner {
+    border-bottom: 2px solid var(--accent-amber);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.report-header-banner h1 {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    color: var(--accent-amber);
+}
+
+.report-meta-table {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    border-collapse: collapse;
+}
+
+.report-meta-table td {
+    padding: 0.4rem 0.75rem;
+    border: 1px solid var(--border-color);
+    font-size: 0.82rem;
+}
+
+.report-section-title {
+    color: var(--accent-amber);
+    font-size: 1rem;
+    margin: 1.5rem 0 0.75rem 0;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 0.3rem;
+}
+
+.report-disclaimer-box {
+    margin-top: 2rem;
+    padding: 1rem;
+    border: 1px solid var(--accent-amber);
+    background: rgba(245, 158, 11, 0.05);
+    font-size: 0.78rem;
+    color: var(--accent-amber);
+    text-align: center;
+}
+
+@media print {
+    .no-print, .console-header, .grid-background, .scanline-overlay { display: none !important; }
+    body { background: white !important; color: black !important; }
+    .printable-forensic-report { color: black !important; padding: 0 !important; }
+    .report-modal-content { border: none !important; box-shadow: none !important; }
+}
