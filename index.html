@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIGITAL BLACK BOX // Flight Recorder & Forensic Reconstruction System</title>
+    <!-- Technical Monospace & Sans-Serif Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/blackbox.css">
+</head>
+<body class="forensic-theme">
+    <!-- Grid Overlay Background -->
+    <div class="grid-background"></div>
+    <div class="scanline-overlay"></div>
+
+    <div class="app-container">
+        <!-- TOP FORENSIC CONSOLE NAVIGATION -->
+        <header class="console-header">
+            <div class="header-brand">
+                <div class="brand-badge">
+                    <span class="pulse-indicator"></span>
+                    <span class="brand-title">DIGITAL BLACK BOX</span>
+                </div>
+                <div class="sys-status-tag">
+                    <span class="label">SYS.STATUS:</span>
+                    <span class="val online-val" id="nav-sys-status">ONLINE // RECORDING</span>
+                </div>
+            </div>
+
+            <nav class="console-nav">
+                <button class="nav-btn active" data-tab="core">
+                    <span class="nav-code">01</span> BLACK BOX CORE
+                </button>
+                <button class="nav-btn" data-tab="stream">
+                    <span class="nav-code">02</span> LIVE FEED
+                </button>
+                <button class="nav-btn" data-tab="incidents">
+                    <span class="nav-code">03</span> INCIDENTS <span class="badge-count" id="nav-incident-count">0</span>
+                </button>
+                <button class="nav-btn" data-tab="reconstruction">
+                    <span class="nav-code">04</span> RECONSTRUCTION
+                </button>
+                <button class="nav-btn" data-tab="system">
+                    <span class="nav-code">05</span> SYSTEM
+                </button>
+                <button class="nav-btn" data-tab="reports">
+                    <span class="nav-code">06</span> REPORTS
+                </button>
+            </nav>
+
+            <div class="header-actions">
+                <button class="btn-simulation" id="btn-run-simulation">
+                    <span class="btn-icon">⚡</span> [ RUN SIMULATED INCIDENT ]
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN FORENSIC WORKSTATION VIEWPORT -->
+        <main class="workstation-viewport">
+            
+            <!-- SECTION 1: BLACK BOX CORE (MAIN OVERVIEW) -->
+            <section id="tab-core" class="tab-content active">
+                <div class="core-grid-layout">
+                    
+                    <!-- Left Technical Panel: Telemetry Metrics -->
+                    <div class="telemetry-panel left-panel">
+                        <div class="panel-header">
+                            <span class="panel-icon">▲</span> SYSTEM TELEMETRY
+                        </div>
+                        <div class="metric-meter-group">
+                            <div class="metric-row">
+                                <div class="metric-label">CPU LOAD <span class="metric-val" id="core-cpu-val">0%</span></div>
+                                <div class="meter-bar-track">
+                                    <div class="meter-bar-fill" id="core-cpu-bar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="metric-row">
+                                <div class="metric-label">MEMORY USAGE <span class="metric-val" id="core-mem-val">0%</span></div>
+                                <div class="meter-bar-track">
+                                    <div class="meter-bar-fill warning" id="core-mem-bar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="metric-row">
+                                <div class="metric-label">DISK CAPACITY <span class="metric-val" id="core-disk-val">0%</span></div>
+                                <div class="meter-bar-track">
+                                    <div class="meter-bar-fill" id="core-disk-bar" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="network-telemetry">
+                            <div class="net-stat">
+                                <span class="net-lbl">NET SENT:</span>
+                                <span class="net-val" id="core-net-sent">0 B/s</span>
+                            </div>
+                            <div class="net-stat">
+                                <span class="net-lbl">NET RECV:</span>
+                                <span class="net-val" id="core-net-recv">0 B/s</span>
+                            </div>
+                            <div class="net-stat">
+                                <span class="net-lbl">STATE:</span>
+                                <span class="net-val success">CONNECTED</span>
+                            </div>
+                        </div>
+
+                        <div class="diagnostic-box">
+                            <div class="diag-title">// STORAGE ENGINE</div>
+                            <div class="diag-detail">SQLite Forensic Vault / WebStorage</div>
+                            <div class="diag-title">// LOGGING FREQUENCY</div>
+                            <div class="diag-detail">1.0 Seconds (Continuous)</div>
+                        </div>
+                    </div>
+
+                    <!-- Center Panel: The Black Box Core SVG Visualizer -->
+                    <div class="core-center-panel">
+                        <div class="black-box-core-visualizer">
+                            <svg class="core-svg-graphic" viewBox="0 0 400 400">
+                                <polygon points="200,20 350,105 350,295 200,380 50,295 50,105" class="hex-outer-ring" />
+                                <circle cx="200" cy="200" r="140" class="ring-middle" />
+                                <circle cx="200" cy="200" r="140" class="ring-progress" id="core-ring-progress" stroke-dasharray="880" stroke-dashoffset="400" />
+                                <circle cx="200" cy="200" r="95" class="ring-inner" />
+                                <circle cx="200" cy="200" r="70" class="ring-pulse" />
+                            </svg>
+
+                            <div class="core-overlay-text">
+                                <div class="recording-badge">
+                                    <span class="red-dot pulse">●</span> RECORDING
+                                </div>
+                                <div class="core-title-text">BLACK BOX CORE</div>
+                                <div class="event-counter-text">
+                                    <span class="num" id="core-event-counter">0</span>
+                                    <span class="lbl">EVENTS RECORDED</span>
+                                </div>
+                                <div class="core-duration-text">
+                                    REC TIME: <span id="core-rec-duration">00:00:00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Continuous Waveform System Pulse -->
+                        <div class="pulse-container shadow-box">
+                            <div class="pulse-header">
+                                <span>SYSTEM PULSE // TELEMETRY WAVEFORM</span>
+                                <span class="pulse-rate">SAMPLING 1000ms</span>
+                            </div>
+                            <canvas id="canvas-system-pulse" width="600" height="90"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Right Technical Panel: Incidents & Quick Logs -->
+                    <div class="telemetry-panel right-panel">
+                        <div class="panel-header">
+                            <span class="panel-icon">⬢</span> RECENT INCIDENTS
+                        </div>
+                        <div class="recent-incidents-list" id="core-recent-incidents-list">
+                            <div class="empty-state-text">No incidents recorded yet.</div>
+                        </div>
+
+                        <div class="panel-header mt-12">
+                            <span class="panel-icon">▤</span> RECORDER STATUS
+                        </div>
+                        <div class="status-summary-list">
+                            <div class="summary-item">
+                                <span class="lbl">SYSTEM UPTIME:</span>
+                                <span class="val" id="core-uptime-val">0s</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="lbl">TOTAL INCIDENTS:</span>
+                                <span class="val amber" id="core-incidents-count-val">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="lbl">LAST INCIDENT:</span>
+                                <span class="val" id="core-last-incident-time">NONE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 2: LIVE EVENT STREAM -->
+            <section id="tab-stream" class="tab-content">
+                <div class="stream-container shadow-box">
+                    <div class="stream-toolbar">
+                        <div class="stream-title">
+                            <span class="icon">💻</span> FLIGHT RECORDER EVENT STREAM
+                        </div>
+                        <div class="stream-controls">
+                            <select id="stream-category-filter" class="console-select">
+                                <option value="ALL">ALL CATEGORIES</option>
+                                <option value="SYS.FAILURE">SYS.FAILURE</option>
+                                <option value="RESOURCE">RESOURCE</option>
+                                <option value="NETWORK">NETWORK</option>
+                                <option value="APPLICATION">APPLICATION</option>
+                            </select>
+                            <button class="console-btn" id="btn-stream-toggle">PAUSE AUTO-SCROLL</button>
+                            <button class="console-btn" id="btn-stream-clear">CLEAR VIEW</button>
+                        </div>
+                    </div>
+
+                    <div class="flight-recorder-console" id="flight-recorder-log-view">
+                        <!-- Log lines appended dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: INCIDENTS ARCHIVE -->
+            <section id="tab-incidents" class="tab-content">
+                <div class="incidents-archive-view shadow-box">
+                    <div class="panel-header">
+                        <span class="panel-icon">📁</span> RECORDED INCIDENTS LOGBOOK
+                    </div>
+                    <div class="incidents-grid" id="incidents-archive-grid">
+                        <!-- Incidents inserted dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: INCIDENT RECONSTRUCTION (TIME MACHINE MODE) -->
+            <section id="tab-reconstruction" class="tab-content">
+                <div class="reconstruction-wrapper" id="reconstruction-container">
+                    
+                    <div class="incident-reconstruction-header shadow-box">
+                        <div class="header-main-info">
+                            <div class="inc-badge-row">
+                                <span class="inc-id-badge" id="recon-incident-id">INCIDENT #0042</span>
+                                <span class="inc-severity-tag" id="recon-severity-tag">CRITICAL FAILURE</span>
+                                <span class="simulation-tag" id="recon-sim-tag" style="display:none;">SIMULATION MODE</span>
+                            </div>
+                            <h2 class="inc-title" id="recon-incident-title">APPLICATION FAILURE DETECTED</h2>
+                            <div class="inc-timestamp-str" id="recon-timestamp-str">TIMESTAMP: 20 SEP 2026 · 10:43:25</div>
+                        </div>
+                        <div class="header-action-group">
+                            <button class="btn-report-gen" id="btn-generate-report">
+                                📜 [ GENERATE BLACK BOX REPORT ]
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- TIME MACHINE SCRUBBER TOOLBAR -->
+                    <div class="time-machine-bar shadow-box">
+                        <div class="tm-title">
+                            <span>⏱ TIME MACHINE CONTROLLER</span>
+                            <span class="tm-subtitle">SCRUB 5-MINUTE PRE-INCIDENT TELEMETRY</span>
+                        </div>
+                        
+                        <div class="scrubber-control-row">
+                            <button class="tm-btn" id="tm-play-btn">▶ PLAY</button>
+                            <button class="tm-btn" id="tm-step-back">◀ STEP -5s</button>
+                            
+                            <div class="slider-container">
+                                <input type="range" id="time-machine-slider" min="0" max="300" value="300" step="1">
+                                <div class="slider-labels">
+                                    <span>T-05m:00s</span>
+                                    <span>T-04m:00s</span>
+                                    <span>T-03m:00s</span>
+                                    <span>T-02m:00s</span>
+                                    <span>T-01m:00s</span>
+                                    <span class="fail-marker">T-00m:00s (FAILURE)</span>
+                                </div>
+                            </div>
+                            
+                            <button class="tm-btn" id="tm-step-fwd">STEP +5s ▶</button>
+                        </div>
+
+                        <div class="scrub-reading-display">
+                            <div class="scrub-item">
+                                <span class="lbl">SCRUB TIME:</span>
+                                <span class="val highlighted" id="tm-scrub-time">--:--:--</span>
+                            </div>
+                            <div class="scrub-item">
+                                <span class="lbl">OFFSET:</span>
+                                <span class="val" id="tm-scrub-offset">0s</span>
+                            </div>
+                            <div class="scrub-item">
+                                <span class="lbl">RECONSTRUCTED CPU:</span>
+                                <span class="val" id="tm-scrub-cpu">0%</span>
+                            </div>
+                            <div class="scrub-item">
+                                <span class="lbl">RECONSTRUCTED RAM:</span>
+                                <span class="val" id="tm-scrub-ram">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reconstruction-two-col">
+                        <div class="reconstruction-timeline-panel shadow-box">
+                            <div class="panel-header">
+                                <span class="panel-icon">⬡</span> 5-MINUTE INCIDENT EVENT RECONSTRUCTION
+                            </div>
+                            <div class="vertical-timeline-container" id="vertical-timeline-tree">
+                                <!-- Reconstructed timeline items populated here -->
+                            </div>
+                        </div>
+
+                        <div class="reconstruction-diagnostics-panel">
+                            <div class="snapshot-procs-box shadow-box">
+                                <div class="panel-header">
+                                    <span class="panel-icon">🔍</span> TOP PROCESSES AT SCRUB TIME
+                                </div>
+                                <table class="proc-table">
+                                    <thead>
+                                        <tr>
+                                            <th>PID</th>
+                                            <th>PROCESS NAME</th>
+                                            <th>CPU %</th>
+                                            <th>MEM %</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tm-procs-body">
+                                        <!-- Process snapshot rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="relationship-map-box shadow-box">
+                                <div class="panel-header">
+                                    <span class="panel-icon">🕸</span> EVENT RELATIONSHIP MAP
+                                </div>
+                                <div class="map-disclaimer">
+                                    <span class="warn-badge">NOTICE:</span> Events observed near failure window. Does not establish definitive root cause.
+                                </div>
+                                <div class="svg-map-viewport" id="event-relationship-map-svg">
+                                    <!-- SVG Directed Graph rendered by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 5: SYSTEM DIAGNOSTICS -->
+            <section id="tab-system" class="tab-content">
+                <div class="system-diagnostics-view shadow-box">
+                    <div class="panel-header">
+                        <span class="panel-icon">⚙</span> HARDWARE & TELEMETRY SUBSYSTEM DIAGNOSTICS
+                    </div>
+                    <div class="sys-diag-grid">
+                        <div class="diag-card">
+                            <h3>RECORDING SUBSYSTEM</h3>
+                            <p>Engine: Flight Recorder Telemetry Engine</p>
+                            <p>Sampling Rate: 1.0 Hz (1000ms)</p>
+                            <p>Storage Vault: SQLite / WebStorage Vault</p>
+                        </div>
+                        <div class="diag-card">
+                            <h3>ANOMALY DETECTION ENGINE</h3>
+                            <p>CPU High Threshold: 85.0%</p>
+                            <p>Memory Critical Threshold: 90.0%</p>
+                            <p>Failure Window Reconstruction: 300 Seconds</p>
+                        </div>
+                        <div class="diag-card">
+                            <h3>FORENSIC SECURITY</h3>
+                            <p>Network Transmission: Client-Side Sandbox</p>
+                            <p>Data Integrity: Append-only Forensic Log</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6: REPORTS & ARCHIVE -->
+            <section id="tab-reports" class="tab-content">
+                <div class="reports-archive-view shadow-box">
+                    <div class="panel-header">
+                        <span class="panel-icon">📄</span> FORENSIC INVESTIGATION REPORTS
+                    </div>
+                    <div id="reports-view-container">
+                        <div class="empty-state-text">Select an incident from Reconstruction Mode and click "[ GENERATE BLACK BOX REPORT ]" to format an official forensic report.</div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- FORENSIC REPORT MODAL -->
+    <div class="modal-backdrop" id="report-modal" style="display: none;">
+        <div class="report-modal-content">
+            <div class="report-modal-toolbar no-print">
+                <button class="console-btn" id="btn-print-report">🖨 PRINT / EXPORT PDF</button>
+                <button class="console-btn close-btn" id="btn-close-report">✕ CLOSE REPORT</button>
+            </div>
+            
+            <div class="printable-forensic-report" id="report-document-body">
+                <!-- Dynamic Report Content Inserted Here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JS MODULES -->
+    <script src="static/js/core.js"></script>
+    <script src="static/js/stream.js"></script>
+    <script src="static/js/pulse.js"></script>
+    <script src="static/js/map.js"></script>
+    <script src="static/js/reconstruction.js"></script>
+    <script src="static/js/app.js"></script>
+</body>
+</html>
